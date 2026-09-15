@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+data/
+models/*.joblib
+*.joblib
+*.zip
+*.tar.gz
+*.7z
+.vscode/
