@@ -1,48 +1,35 @@
-from pathlib import Path
-
 import pandas as pd
-
+from pathlib import Path
 from src.settings import (
-    LABEL_COLUMN,
-    MESSAGE_COLUMN,
-    RAW_CSV_ENCODING,
     RAW_DATA_PATH,
+    RAW_CSV_ENCODING,
     RAW_LABEL_COLUMN,
     RAW_MESSAGE_COLUMN,
+    LABEL_COLUMN,
+    MESSAGE_COLUMN,
 )
 
-
 def load_raw_dataset(csv_path: Path = RAW_DATA_PATH) -> pd.DataFrame:
-  
+
     if not csv_path.exists():
         raise FileNotFoundError(
-            f"Dataset not found: {csv_pathf first spam.csv ko "
-            f"data/raw/ move into folder."
+            f"Dataset not found at {csv_path}. Please place spam.csv in data/raw/ folder."
         )
-
+    
+    # Raw data load karein
     df = pd.read_csv(csv_path, encoding=RAW_CSV_ENCODING)
-    df = df[[RAW_LABEL_COLUMN, RAW_MESSAGE_COLUMN]]
-    df = df.rename(columns={
-        RAW_LABEL_COLUMN: LABEL_COLUMN,
-        RAW_MESSAGE_COLUMN: MESSAGE_COLUMN,
-    })
-
+    
+    # Specific columns extract aur rename karein
+    df = df[[RAW_LABEL_COLUMN, RAW_MESSAGE_COLUMN]].copy()
+    df.columns = [LABEL_COLUMN, MESSAGE_COLUMN]
+    
     return df
 
-
 def summarize_dataset(df: pd.DataFrame) -> dict:
-    class_counts = df[LABEL_COLUMN].value_counts()
-    class_percent = df[LABEL_COLUMN].value_counts(normalize=True) * 100
-
-    char_lengths = df[MESSAGE_COLUMN].str.len()
-    word_counts = df[MESSAGE_COLUMN].str.split().str.len()
-
-    summary = {
-        "total_rows": len(df),
-        "class_counts": class_counts.to_dict(),
-        "class_percent": class_percent.round(2).to_dict(),
-        "avg_char_length": round(char_lengths.mean(), 2),
-        "avg_word_count": round(word_counts.mean(), 2),
+    class_counts = df[LABEL_COLUMN].value_counts().to_dict()
+    total_samples = len(df)
+    
+    return {
+        "total_samples": total_samples,
+        "class_counts": class_counts
     }
-
-    return summary

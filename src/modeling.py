@@ -11,16 +11,19 @@ from src.settings import HAM_LABEL, RANDOM_STATE, SPAM_LABEL
 
 
 def get_naive_bayes() -> MultinomialNB:
+    """Initializes and returns a Multinomial Naive Bayes classifier."""
     return MultinomialNB()
 
 
 def get_linear_svm() -> LinearSVC:
+    """Initializes and returns a Linear Support Vector Classifier with balanced class weights."""
     return LinearSVC(class_weight="balanced", random_state=RANDOM_STATE)
 
 
 def train_and_evaluate(
     model: Any, x_train: Any, y_train: Any, x_test: Any, y_test: Any, approach_name: str
 ) -> Dict[str, Any]:
+    """Trains a given model on training data and evaluates performance metrics on test data."""
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
     accuracy = accuracy_score(y_test, y_pred)
@@ -43,6 +46,7 @@ def train_and_evaluate(
 
 
 def top_spam_words(model: Any, vectorizer: Any, top_n: int = 15) -> List[Tuple[str, float]]:
+    """Extracts the top N most influential words for spam classification."""
     feature_names = np.array(vectorizer.get_feature_names_out())
 
     if hasattr(model, "coef_"):
@@ -56,6 +60,7 @@ def top_spam_words(model: Any, vectorizer: Any, top_n: int = 15) -> List[Tuple[s
 
 
 def find_misclassified(messages: Any, y_true: Any, y_pred: Any, n: int = 5) -> List[Dict[str, Any]]:
+    """Identifies misclassified text examples by comparing true and predicted labels."""
     messages_list = list(messages)
     y_true_list = list(y_true)
     y_pred_list = list(y_pred)
@@ -75,6 +80,7 @@ def find_misclassified(messages: Any, y_true: Any, y_pred: Any, n: int = 5) -> L
 
 
 def plot_confusion_matrix(y_true: Any, y_pred: Any, title: str, save_path: Path) -> None:
+    """Generates and saves a confusion matrix plot image to the specified path."""
     cm = confusion_matrix(y_true, y_pred)
     labels = [HAM_LABEL, SPAM_LABEL]
 
@@ -85,7 +91,7 @@ def plot_confusion_matrix(y_true: Any, y_pred: Any, title: str, save_path: Path)
         for j in range(cm.shape[1]):
             color = "white" if cm[i, j] > cm.max() / 2 else "black"
             ax.text(j, i, str(cm[i, j]), ha="center", va="center",
-                     color=color, fontsize=14, fontweight="bold")
+                    color=color, fontsize=14, fontweight="bold")
 
     ax.set_xticks([0, 1])
     ax.set_yticks([0, 1])
