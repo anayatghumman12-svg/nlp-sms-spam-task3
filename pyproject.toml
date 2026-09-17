@@ -1,0 +1,26 @@
+[project]
+name = "nlp-sms-spam-task3"
+version = "1.0.0"
+description = "SMS spam classification pipeline with FastAPI deployment (NextBridge AI/ML Track internship task)"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "pandas==3.0.5",
+    "numpy==2.4.6",
+    "scikit-learn==1.9.1",
+    "scipy==1.17.1",
+    "nltk==3.10.3",
+    "joblib==1.6.0",
+    "matplotlib==3.10.0",
+    "fastapi==0.141.1",
+    "uvicorn==0.53.0",
+    "python-multipart==0.0.32",
+    "jinja2==3.1.6",
+    "pydantic==2.13.5",
+    "gensim==4.4.0",
+    "sentence-transformers==6.0.1",
+    "torch==2.14.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"

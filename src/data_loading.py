@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 
 from src.settings import (
@@ -8,12 +10,14 @@ from src.settings import (
     RAW_LABEL_COLUMN,
     RAW_MESSAGE_COLUMN,
 )
-def load_raw_dataset(csv_path=RAW_DATA_PATH) -> pd.DataFrame:
+
+
+def load_raw_dataset(csv_path: Path = RAW_DATA_PATH) -> pd.DataFrame:
   
     if not csv_path.exists():
         raise FileNotFoundError(
-            f"Dataset nahi mila: {csv_path}. Pehle spam.csv ko "
-            f"data/raw/ folder mein daalo."
+            f"Dataset not found: {csv_pathf first spam.csv ko "
+            f"data/raw/ move into folder."
         )
 
     df = pd.read_csv(csv_path, encoding=RAW_CSV_ENCODING)
@@ -29,6 +33,7 @@ def load_raw_dataset(csv_path=RAW_DATA_PATH) -> pd.DataFrame:
 def summarize_dataset(df: pd.DataFrame) -> dict:
     class_counts = df[LABEL_COLUMN].value_counts()
     class_percent = df[LABEL_COLUMN].value_counts(normalize=True) * 100
+
     char_lengths = df[MESSAGE_COLUMN].str.len()
     word_counts = df[MESSAGE_COLUMN].str.split().str.len()
 
