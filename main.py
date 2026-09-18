@@ -26,6 +26,25 @@ from src.train_and_save import save_pipeline, train_final_pipeline
 
 
 def main() -> None:
+    """
+    Runs the full spam classification pipeline end-to-end:
+
+        1. Loads and summarizes the raw dataset.
+        2. Cleans the message text.
+        3. Builds TF-IDF and Bag-of-Words features and trains classical
+           models (Naive Bayes, Linear SVM) on them.
+        4. Builds GloVe embedding features and trains a Logistic Regression
+           model (skipped gracefully on failure).
+        5. Builds Sentence-Transformer embedding features and trains a
+           Logistic Regression model (skipped gracefully on failure).
+        6. Extracts top spam-indicative words and misclassified examples.
+        7. Computes confusion matrices for the best and worst performing models.
+        8. Saves comparison results, top words, and misclassified examples to CSV.
+        9. Trains and saves the final deployment pipeline.
+
+    Returns:
+        None
+    """
     print("Step 1: Loading dataset...")
     df = load_raw_dataset()
     summary = summarize_dataset(df)

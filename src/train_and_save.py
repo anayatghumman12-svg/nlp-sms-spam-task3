@@ -16,6 +16,13 @@ from src.settings import (
 
 
 def train_final_pipeline() -> Pipeline:
+    """
+    Loads and preprocesses the dataset, then trains a calibrated Linear SVM
+    pipeline (TF-IDF + calibrated classifier) for spam detection.
+
+    Returns:
+        Pipeline: The trained scikit-learn pipeline, fitted on the training split.
+    """
     df = load_raw_dataset()
     df = add_clean_message_column(df)
 
@@ -43,13 +50,34 @@ def train_final_pipeline() -> Pipeline:
 
 
 def save_pipeline(pipeline: Pipeline, path: Path = FINAL_PIPELINE_PATH) -> None:
-  
+    """
+    Saves the trained pipeline to disk using joblib.
+
+    Args:
+        pipeline (Pipeline): The trained pipeline to save.
+        path (Path, optional): Destination file path. Defaults to FINAL_PIPELINE_PATH.
+
+    Returns:
+        None
+    """
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
     joblib.dump(pipeline, path)
     print(f"Pipeline saved to {path}")
 
 
 def load_pipeline(path: Path = FINAL_PIPELINE_PATH) -> Pipeline:
+    """
+    Loads a previously trained pipeline from disk.
+
+    Args:
+        path (Path, optional): Path to the saved pipeline file. Defaults to FINAL_PIPELINE_PATH.
+
+    Returns:
+        Pipeline: The loaded scikit-learn pipeline.
+
+    Raises:
+        FileNotFoundError: If no pipeline file exists at the given path.
+    """
     if not path.exists():
         raise FileNotFoundError(
             f"trained pipeline not found any {path} pe. runs'python main.py' first ."

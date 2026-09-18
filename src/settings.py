@@ -1,3 +1,5 @@
+"""Project-wide configuration settings and constants."""
+
 from pathlib import Path
 
 # Project Directories

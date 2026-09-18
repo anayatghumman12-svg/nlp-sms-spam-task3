@@ -11,19 +11,45 @@ from src.settings import HAM_LABEL, RANDOM_STATE, SPAM_LABEL
 
 
 def get_naive_bayes() -> MultinomialNB:
-    """Initializes and returns a Multinomial Naive Bayes classifier."""
+    """
+    Initializes and returns a Multinomial Naive Bayes classifier.
+
+    Returns:
+        MultinomialNB: A new instance of the Multinomial Naive Bayes classifier.
+    """
     return MultinomialNB()
 
 
 def get_linear_svm() -> LinearSVC:
-    """Initializes and returns a Linear Support Vector Classifier with balanced class weights."""
+    """
+    Initializes and returns a Linear Support Vector Classifier with balanced class weights.
+
+    Returns:
+        LinearSVC: A new instance of the Linear SVM classifier configured
+                   with balanced class weights and a fixed random state.
+    """
     return LinearSVC(class_weight="balanced", random_state=RANDOM_STATE)
 
 
 def train_and_evaluate(
     model: Any, x_train: Any, y_train: Any, x_test: Any, y_test: Any, approach_name: str
 ) -> Dict[str, Any]:
-    """Trains a given model on training data and evaluates performance metrics on test data."""
+    """
+    Trains a given model on training data and evaluates performance metrics on test data.
+
+    Args:
+        model (Any): The classifier/model to train.
+        x_train (Any): Training feature data.
+        y_train (Any): Training labels.
+        x_test (Any): Test feature data.
+        y_test (Any): Test labels.
+        approach_name (str): Name identifying the approach/model being evaluated.
+
+    Returns:
+        Dict[str, Any]: A dictionary containing the approach name, accuracy,
+                         precision, recall, f1-score (for the spam class),
+                         and the trained model itself.
+    """
     model.fit(x_train, y_train)
     y_pred = model.predict(x_test)
     accuracy = accuracy_score(y_test, y_pred)
@@ -46,7 +72,18 @@ def train_and_evaluate(
 
 
 def top_spam_words(model: Any, vectorizer: Any, top_n: int = 15) -> List[Tuple[str, float]]:
-    """Extracts the top N most influential words for spam classification."""
+    """
+    Extracts the top N most influential words for spam classification.
+
+    Args:
+        model (Any): The trained classifier (must have `coef_` or `feature_log_prob_`).
+        vectorizer (Any): The fitted vectorizer used to extract feature names.
+        top_n (int, optional): Number of top words to return. Defaults to 15.
+
+    Returns:
+        List[Tuple[str, float]]: A list of (word, score) tuples sorted by
+                                  descending influence/importance.
+    """
     feature_names = np.array(vectorizer.get_feature_names_out())
 
     if hasattr(model, "coef_"):
@@ -60,7 +97,19 @@ def top_spam_words(model: Any, vectorizer: Any, top_n: int = 15) -> List[Tuple[s
 
 
 def find_misclassified(messages: Any, y_true: Any, y_pred: Any, n: int = 5) -> List[Dict[str, Any]]:
-    """Identifies misclassified text examples by comparing true and predicted labels."""
+    """
+    Identifies misclassified text examples by comparing true and predicted labels.
+
+    Args:
+        messages (Any): Iterable of original text messages.
+        y_true (Any): Iterable of true labels.
+        y_pred (Any): Iterable of predicted labels.
+        n (int, optional): Maximum number of misclassified examples to return. Defaults to 5.
+
+    Returns:
+        List[Dict[str, Any]]: A list of dictionaries, each containing the message,
+                               true label, and predicted label for a misclassified example.
+    """
     messages_list = list(messages)
     y_true_list = list(y_true)
     y_pred_list = list(y_pred)
@@ -80,7 +129,18 @@ def find_misclassified(messages: Any, y_true: Any, y_pred: Any, n: int = 5) -> L
 
 
 def plot_confusion_matrix(y_true: Any, y_pred: Any, title: str, save_path: Path) -> None:
-    """Generates and saves a confusion matrix plot image to the specified path."""
+    """
+    Generates and saves a confusion matrix plot image to the specified path.
+
+    Args:
+        y_true (Any): Iterable of true labels.
+        y_pred (Any): Iterable of predicted labels.
+        title (str): Title to display on the plot.
+        save_path (Path): File path where the plot image will be saved.
+
+    Returns:
+        None
+    """
     cm = confusion_matrix(y_true, y_pred)
     labels = [HAM_LABEL, SPAM_LABEL]
 
